@@ -1,0 +1,30 @@
+name: .NET CI
+
+# Define when the workflow should run
+on:
+  push:
+    branches: [ main ] # Run on every push to the main branch
+  pull_request:
+    branches: [ main ] # Run on every pull request to the main branch
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest # Use the latest version of Ubuntu as the runner
+
+    steps:
+    - uses: actions/checkout@v2 # Checkout the repository to the runner
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '8.0.x' # Setup .NET SDK version 8.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore # Restore project dependencies
+
+    - name: Build
+      run: dotnet build --configuration Release --no-restore # Build the project in Release mode
+
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal # Run unit tests
